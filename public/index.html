@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Кофейня — меню</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <h1>☕️ Наша кофейня</h1>
+    <button id="cart-toggle" class="cart-toggle" type="button">
+      🛒 <span id="cart-count">0</span>
+    </button>
+  </header>
+
+  <main id="menu" class="menu"></main>
+
+  <div id="cart-overlay" class="overlay hidden">
+    <div class="cart-sheet">
+      <div class="cart-sheet-header">
+        <h2>Корзина</h2>
+        <button id="cart-close" class="icon-btn" type="button">✕</button>
+      </div>
+      <div id="cart-items" class="cart-items"></div>
+      <div class="cart-extra">
+        <label for="phone">Телефон (необязательно)</label>
+        <input id="phone" type="tel" placeholder="+7 900 000-00-00" />
+        <label for="comment">Комментарий к заказу</label>
+        <textarea id="comment" rows="2" placeholder="Например: без сахара, к 15:00"></textarea>
+      </div>
+      <div class="cart-total">
+        Итого: <span id="cart-total">0 ₽</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
