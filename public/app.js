@@ -6,9 +6,11 @@ if (tg) {
 
 const state = {
   menu: [],
-  cart: {} // itemId -> qty
+  cart: {}, // itemId -> qty
+  activeGroup: null
 };
 
+const tabsEl = document.getElementById('tabs');
 const menuEl = document.getElementById('menu');
 const cartCountEl = document.getElementById('cart-count');
 const cartItemsEl = document.getElementById('cart-items');
@@ -50,8 +52,30 @@ function setQty(id, qty) {
   syncMainButton();
 }
 
+const groupEmoji = {
+  'Сендвичи': '🥪'
+};
+
+function renderTabs() {
+  const groups = [...new Set(state.menu.map((item) => item.group))];
+  tabsEl.innerHTML = '';
+
+  groups.forEach((group) => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (group === state.activeGroup ? ' active' : '');
+    btn.textContent = `${groupEmoji[group] || '☕️'} ${group}`;
+    btn.onclick = () => {
+      state.activeGroup = group;
+      renderTabs();
+      renderMenu();
+    };
+    tabsEl.appendChild(btn);
+  });
+}
+
 function renderMenu() {
-  const categories = [...new Set(state.menu.map((item) => item.category))];
+  const groupItems = state.menu.filter((item) => item.group === state.activeGroup);
+  const categories = [...new Set(groupItems.map((item) => item.category))];
   menuEl.innerHTML = '';
 
   categories.forEach((category) => {
@@ -60,7 +84,7 @@ function renderMenu() {
     title.textContent = category;
     menuEl.appendChild(title);
 
-    state.menu
+    groupItems
       .filter((item) => item.category === category)
       .forEach((item) => {
         const qty = state.cart[item.id] || 0;
@@ -201,6 +225,8 @@ if (tg) {
 async function init() {
   const res = await fetch('/api/menu');
   state.menu = await res.json();
+  state.activeGroup = state.menu[0] ? state.menu[0].group : null;
+  renderTabs();
   renderMenu();
   renderCart();
   syncMainButton();
